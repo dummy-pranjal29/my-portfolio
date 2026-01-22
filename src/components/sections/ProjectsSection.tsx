@@ -69,6 +69,10 @@ export default function ProjectsSection() {
               "RAG",
               "PostgreSQL",
             ]}
+            links={{
+              github:
+                "https://github.com/dummy-pranjal29/contract-intelligence",
+            }}
           />
         </div>
       </div>
