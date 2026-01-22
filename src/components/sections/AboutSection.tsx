@@ -1,23 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState } from "react";
+import EducationCard from "@/components/about/EducationCard";
 
 export default function AboutSection() {
-  return (
-    <section
-      id="about"
-      className="min-h-screen flex items-center justify-center px-6"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        viewport={{ once: true }}
-        className="max-w-3xl text-center"
-      >
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">About Me</h2>
+  const [open, setOpen] = useState(false);
 
-        <p className="text-gray-400 text-lg leading-relaxed">
+  return (
+    <section className="py-24">
+      <div className="max-w-5xl mx-auto px-6">
+        <h2 className="text-3xl font-semibold mb-6">About Me</h2>
+
+        <p className="text-gray-400 text-lg leading-relaxed max-w-3xl mb-10">
           I’m a software developer who enjoys turning complex ideas into clean,
           reliable, and scalable systems. I’ve worked across full-stack and
           backend development, building modern web platforms with Next.js and
@@ -30,7 +24,43 @@ export default function AboutSection() {
           cricket and chess, which keep me sharp, patient, and thoughtful in how
           I approach problems.
         </p>
-      </motion.div>
+
+        {/* Education toggle */}
+        <button
+          onClick={() => setOpen(!open)}
+          className="flex items-center gap-2 text-cyan-400 font-medium hover:underline"
+        >
+          {open ? "Hide Education ▲" : "View Education ▼"}
+        </button>
+
+        {open && (
+          <div className="mt-8 grid md:grid-cols-2 gap-6">
+            <EducationCard
+              title="Birla Institute of Technology, Mesra"
+              level="B.Tech in Electrical & Electronics Engineering"
+              score="CGPA: 7.5 / 10"
+              duration="2022 – 2026"
+              link="https://www.bitmesra.ac.in"
+            />
+
+            <EducationCard
+              title="DAV Public School, Jamshedpur"
+              level="Intermediate (Class XII)"
+              score="Percentage: 91.2%"
+              duration="2019 – 2021"
+              link="https://davbistupur.org"
+            />
+
+            <EducationCard
+              title="Rajendra Vidyalaya, Jamshedpur"
+              level="Matriculation (Class X)"
+              score="Percentage: 94.6%"
+              duration="2018 – 2019"
+              link="https://rajendravidyalaya.edu.in"
+            />
+          </div>
+        )}
+      </div>
     </section>
   );
 }

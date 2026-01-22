@@ -1,6 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
+import Button from "@/components/ui/Button";
+
+<div className="mt-10 flex flex-wrap justify-center gap-4">
+  <Button href="/projects">View Projects</Button>
+  <Button href="/opensource" variant="secondary">
+    Open Source
+  </Button>
+  <Button href="/contact" variant="ghost">
+    Contact Me
+  </Button>
+</div>;
 
 export default function HomeSection() {
   return (
@@ -24,20 +36,45 @@ export default function HomeSection() {
           Developer • Explorer • Problem Solver
         </p>
 
-        <div className="mt-10 flex justify-center gap-4">
-          <a
-            href="#projects"
-            className="px-6 py-3 bg-cyan-500 text-black rounded-lg font-medium"
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <Link
+            href="/projects"
+            className="
+      px-6 py-3 rounded-lg font-medium
+      bg-cyan-500 text-black
+      transition-all duration-300
+      hover:bg-cyan-400 hover:-translate-y-0.5
+      focus:outline-none focus:ring-2 focus:ring-cyan-500/50
+    "
           >
             View Projects
-          </a>
+          </Link>
 
-          <a
-            href="#contact"
-            className="px-6 py-3 border border-gray-600 rounded-lg"
+          <Link
+            href="/opensource"
+            className="
+      px-6 py-3 rounded-lg font-medium
+      border border-cyan-500 text-cyan-400
+      transition-all duration-300
+      hover:bg-cyan-500/10 hover:-translate-y-0.5
+      focus:outline-none focus:ring-2 focus:ring-cyan-500/40
+    "
+          >
+            Open Source
+          </Link>
+
+          <Link
+            href="/contact"
+            className="
+      px-6 py-3 rounded-lg font-medium
+      border border-gray-600 text-gray-300
+      transition-all duration-300
+      hover:border-gray-400 hover:text-white hover:-translate-y-0.5
+      focus:outline-none focus:ring-2 focus:ring-gray-500/40
+    "
           >
             Contact Me
-          </a>
+          </Link>
         </div>
       </motion.div>
     </section>

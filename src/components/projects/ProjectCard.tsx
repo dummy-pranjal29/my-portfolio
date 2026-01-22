@@ -24,7 +24,7 @@ export default function ProjectCard({
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.25 }}
-      className="p-6 border border-gray-700 rounded-xl bg-neutral-900 hover:border-cyan-500/40"
+      className="p-6 border border-gray-700 rounded-xl bg-neutral-900 hover:border-cyan-500/40 focus-within:ring-2 focus-within:ring-cyan-500/30"
     >
       <h3 className="text-xl font-semibold mb-2">{title}</h3>
 
