@@ -16,24 +16,35 @@ export default function OpenSourceCard({
   link,
 }: OpenSourceCardProps) {
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.25 }}
-      className="p-6 border border-gray-700 rounded-xl bg-neutral-900 hover:border-emerald-500/40"
+    <motion.a
+      href={link}
+      target="_blank"
+      rel="noopener noreferrer"
+      whileHover={{ y: -6, scale: 1.03 }}
+      transition={{ type: "spring", stiffness: 220, damping: 18 }}
+      className="
+        relative block p-6 rounded-2xl
+        border border-white/10
+        bg-white/5 backdrop-blur-xl
+        shadow-[0_0_40px_rgba(34,211,238,0.08)]
+        hover:border-cyan-400/40
+        transition
+      "
     >
-      <h3 className="text-lg font-semibold mb-1">{project}</h3>
+      {/* subtle glow */}
+      <div
+        className="
+          pointer-events-none absolute inset-0 rounded-2xl
+          bg-gradient-to-br from-cyan-400/10 to-transparent
+          opacity-0 hover:opacity-100 transition
+        "
+      />
 
-      <p className="text-sm text-emerald-400 mb-2">{contribution}</p>
-
-      <p className="text-gray-400 text-sm mb-4">{description}</p>
-
-      <a
-        href={link}
-        target="_blank"
-        className="text-sm text-emerald-400 hover:underline"
-      >
-        View Contribution →
-      </a>
-    </motion.div>
+      <div className="relative z-10">
+        <h3 className="text-lg font-semibold mb-1">{project}</h3>
+        <p className="text-sm text-cyan-400 mb-3">{contribution}</p>
+        <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
+      </div>
+    </motion.a>
   );
 }

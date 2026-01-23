@@ -1,4 +1,5 @@
 import ContactSection from "@/components/sections/ContactSection";
+import BackgroundScene from "@/components/background/BackgroundScene";
 
 export const metadata = {
   title: "Contact | Aditya Pranjal",
@@ -8,8 +9,11 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
-      <ContactSection />
-    </main>
+    <>
+      <BackgroundScene variant="contact" />
+      <main className="relative z-10 min-h-screen text-white">
+        <ContactSection />
+      </main>
+    </>
   );
 }

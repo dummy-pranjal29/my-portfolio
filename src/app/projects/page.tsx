@@ -1,4 +1,5 @@
 import ProjectsSection from "@/components/sections/ProjectsSection";
+import BackgroundScene from "@/components/background/BackgroundScene";
 
 export const metadata = {
   title: "Projects | Aditya Pranjal",
@@ -8,8 +9,14 @@ export const metadata = {
 
 export default function ProjectsPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
-      <ProjectsSection />
-    </main>
+    <>
+      {/* Cinematic background */}
+      <BackgroundScene variant="projects" />
+
+      {/* Foreground content */}
+      <main className="relative z-10 min-h-screen text-white">
+        <ProjectsSection />
+      </main>
+    </>
   );
 }

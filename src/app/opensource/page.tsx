@@ -1,3 +1,4 @@
+import BackgroundScene from "@/components/background/BackgroundScene";
 import OpenSourceSection from "@/components/sections/OpenSourceSection";
 
 export const metadata = {
@@ -8,8 +9,14 @@ export const metadata = {
 
 export default function OpenSourcePage() {
   return (
-    <main className="min-h-screen bg-black text-white">
-      <OpenSourceSection />
-    </main>
+    <>
+      {/* Cinematic background for Open Source */}
+      <BackgroundScene variant="opensource" />
+
+      {/* Foreground content */}
+      <main className="relative z-10 min-h-screen text-white">
+        <OpenSourceSection />
+      </main>
+    </>
   );
 }

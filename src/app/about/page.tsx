@@ -1,3 +1,4 @@
+import BackgroundScene from "@/components/background/BackgroundScene";
 import AboutSection from "@/components/sections/AboutSection";
 
 export const metadata = {
@@ -8,8 +9,14 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-black text-white">
-      <AboutSection />
-    </main>
+    <>
+      {/* Cinematic background for About */}
+      <BackgroundScene variant="about" />
+
+      {/* Foreground content */}
+      <main className="relative z-10 min-h-screen text-white">
+        <AboutSection />
+      </main>
+    </>
   );
 }
