@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import HeroIdentity from "@/components/hero/HeroIdentity";
+import ChatWidget from "@/app/ui/ChatWidget";
 
 export default function HomeSection() {
   const mouseX = useMotionValue(0);
@@ -181,6 +182,11 @@ export default function HomeSection() {
           </Link>
         </div>
       </motion.div>
+
+      {/* AI Recruiter Chat */}
+      <div className="absolute bottom-6 right-6 z-20">
+        <ChatWidget />
+      </div>
     </section>
   );
 }
