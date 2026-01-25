@@ -1,31 +1,56 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
+import { CalendarDrawer } from "@/components/calendar/CalendarDrawer";
 
 export default function Navbar() {
-  return (
-    <nav className="fixed top-0 w-full z-50 bg-black/70 backdrop-blur border-b border-gray-800">
-      <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="font-semibold text-cyan-400">
-          ME :)
-        </Link>
+  const [calendarOpen, setCalendarOpen] = useState<boolean>(false);
 
-        <div className="flex gap-6 text-sm text-gray-300">
-          <Link href="/about" className="hover:text-cyan-400">
-            About
+  const navItemClass =
+    "text-sm font-medium text-zinc-300 hover:text-cyan-400 transition-colors font-sans";
+
+  return (
+    <>
+      <nav className="fixed top-0 w-full z-50 bg-black/70 backdrop-blur border-b border-zinc-800">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+          {/* Brand */}
+          <Link
+            href="/"
+            className="text-sm font-semibold tracking-wide text-cyan-400 font-sans"
+          >
+            ME :)
           </Link>
-          <Link href="/projects" className="hover:text-cyan-400">
-            Projects
-          </Link>
-          <Link href="/opensource" className="hover:text-cyan-400">
-            Open Source
-          </Link>
-          <Link href="/experience" className="hover:text-cyan-400">
-            Experience
-          </Link>
-          <Link href="/contact" className="hover:text-cyan-400">
-            Contact
-          </Link>
+
+          {/* Nav items */}
+          <div className="flex items-center gap-7">
+            <Link href="/about" className={navItemClass}>
+              About
+            </Link>
+            <Link href="/projects" className={navItemClass}>
+              Projects
+            </Link>
+            <Link href="/opensource" className={navItemClass}>
+              Open Source
+            </Link>
+            <Link href="/experience" className={navItemClass}>
+              Experience
+            </Link>
+            <Link href="/contact" className={navItemClass}>
+              Contact
+            </Link>
+
+            <button
+              onClick={() => setCalendarOpen(true)}
+              className={navItemClass}
+            >
+              Calendar
+            </button>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      <CalendarDrawer open={calendarOpen} onOpenChange={setCalendarOpen} />
+    </>
   );
 }
