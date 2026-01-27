@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
   });
 
   const tokenData = await tokenRes.json();
+  console.log("GOOGLE_REFRESH_TOKEN:", tokenData.refresh_token);
 
   if (!tokenRes.ok) {
     return NextResponse.json(tokenData, { status: 500 });

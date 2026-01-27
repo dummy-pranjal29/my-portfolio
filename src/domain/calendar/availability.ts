@@ -1,6 +1,5 @@
 export enum AvailabilityStatus {
   Free = "free",
-  Busy = "busy",
   Unavailable = "unavailable",
 }
 

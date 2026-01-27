@@ -1,13 +1,4 @@
 import { google } from "googleapis";
-import fs from "fs";
-import path from "path";
-
-/**
- * Load Google OAuth refresh token from config file
- */
-const authConfigPath = path.join(process.cwd(), "config/google-auth.json");
-
-const authConfig = JSON.parse(fs.readFileSync(authConfigPath, "utf8"));
 
 /**
  * Fetch events from the user's Google Calendar (OAuth-based)
@@ -24,8 +15,13 @@ export async function fetchCalendarEvents(timeMin: string, timeMax: string) {
       process.env.GOOGLE_REDIRECT_URI,
     );
 
+    // ✅ SINGLE SOURCE OF TRUTH
+    if (!process.env.GOOGLE_REFRESH_TOKEN) {
+      throw new Error("GOOGLE_REFRESH_TOKEN is not set");
+    }
+
     oauth2Client.setCredentials({
-      refresh_token: authConfig.refresh_token,
+      refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
     });
 
     const calendar = google.calendar({

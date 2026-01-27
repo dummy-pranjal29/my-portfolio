@@ -1,23 +1,16 @@
-import { AvailabilityBlock } from "./availability";
-
-enum AvailabilityStatus {
-  Unavailable = "unavailable",
-  Available = "available",
-  Busy = "busy",
-  // Add more status values as needed
-}
+import { AvailabilityBlock, AvailabilityStatus } from "./availability";
 
 export const mockAvailabilityBlocks: AvailabilityBlock[] = [
   {
     date: "2026-01-10",
-    status: AvailabilityStatus.Busy,
+    status: AvailabilityStatus.Unavailable,
     reason: "Exam",
     source: "manual",
     confidence: "high",
   },
   {
     date: "2026-01-18",
-    status: AvailabilityStatus.Busy,
+    status: AvailabilityStatus.Unavailable,
     reason: "Travel",
     source: "manual",
     confidence: "high",
