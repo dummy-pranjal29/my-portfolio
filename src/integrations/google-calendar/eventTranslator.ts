@@ -1,11 +1,15 @@
-import { AvailabilityBlock } from "@/domain/calendar/availability";
+import { calendar_v3 } from "googleapis";
+import {
+  AvailabilityBlock,
+  AvailabilityStatus,
+} from "@/domain/calendar/availability";
 
 /**
  * Convert raw Google Calendar events into
  * privacy-safe AvailabilityBlocks (day-level only).
  */
 export function translateEventsToAvailability(
-  events: any[],
+  events: calendar_v3.Schema$Event[],
 ): AvailabilityBlock[] {
   const blocksMap = new Map<string, AvailabilityBlock>();
 
@@ -27,7 +31,7 @@ export function translateEventsToAvailability(
       if (!blocksMap.has(dateKey)) {
         blocksMap.set(dateKey, {
           date: dateKey,
-          status: "busy",
+          status: AvailabilityStatus.Unavailable, // ✅ enum, not string
           reason: inferReason(event),
           source: "google",
           confidence: "derived",
@@ -45,7 +49,9 @@ export function translateEventsToAvailability(
  * Infer a privacy-safe reason from event metadata.
  * NEVER return raw titles.
  */
-function inferReason(event: any): AvailabilityBlock["reason"] {
+function inferReason(
+  event: calendar_v3.Schema$Event,
+): AvailabilityBlock["reason"] {
   const text =
     `${event.summary ?? ""} ${event.description ?? ""}`.toLowerCase();
 
