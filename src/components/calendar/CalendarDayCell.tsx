@@ -2,7 +2,10 @@
 
 import clsx from "clsx";
 import { format } from "date-fns";
-import { MockAvailability } from "./mockAvailability";
+import {
+  AvailabilityBlock,
+  AvailabilityStatus,
+} from "@/domain/calendar/availability";
 
 interface CalendarDayCellProps {
   date: Date;
@@ -10,7 +13,7 @@ interface CalendarDayCellProps {
   isCurrentMonth: boolean;
   isToday: boolean;
   isSelected: boolean;
-  availability?: MockAvailability;
+  availability?: AvailabilityBlock;
   onSelect: (date: string) => void;
 }
 
@@ -23,15 +26,23 @@ export function CalendarDayCell({
   availability,
   onSelect,
 }: CalendarDayCellProps) {
-  const isBusy = availability?.status === "busy";
+  const isUnavailable = availability?.status === AvailabilityStatus.Unavailable;
 
   return (
-    <button
-      onClick={() => onSelect(dateKey)}
-      aria-label={`Select ${dateKey}`}
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => {
+        onSelect(dateKey);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onSelect(dateKey);
+        }
+      }}
       className={clsx(
-        "h-10 w-full rounded-md flex items-center justify-center text-sm font-mono relative",
-        "hover:bg-zinc-800",
+        "h-10 w-full rounded-md flex items-center justify-center text-sm font-mono relative cursor-pointer",
+        "hover:bg-zinc-800 transition-colors",
         !isCurrentMonth && "text-zinc-600",
         isSelected && "ring-1 ring-indigo-500",
         isToday && "border border-indigo-400",
@@ -42,9 +53,9 @@ export function CalendarDayCell({
       <span
         className={clsx(
           "absolute bottom-1 h-1.5 w-1.5 rounded-full",
-          isBusy ? "bg-red-400" : "bg-emerald-400",
+          isUnavailable ? "bg-red-400" : "bg-emerald-400",
         )}
       />
-    </button>
+    </div>
   );
 }

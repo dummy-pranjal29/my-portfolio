@@ -31,6 +31,8 @@ export function CalendarGrid({
 
   const days = eachDayOfInterval({ start, end });
 
+  console.log("availabilityMap", availabilityMap);
+
   return (
     <div className="px-4">
       <div className="grid grid-cols-7 text-xs text-zinc-500 mb-2">

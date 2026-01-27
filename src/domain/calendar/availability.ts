@@ -1,18 +1,16 @@
-// src/domain/calendar/availability.ts
+export enum AvailabilityStatus {
+  Free = "free",
+  Busy = "busy",
+  Unavailable = "unavailable",
+}
 
-export type AvailabilityStatus = "free" | "busy";
-
-export type AvailabilityReason =
-  | "Exam"
-  | "Travel"
-  | "Personal"
-  | "Unavailable"
-  | "Other";
+export type AvailabilitySource = "google" | "manual";
+export type AvailabilityConfidence = "high" | "derived";
 
 export interface AvailabilityBlock {
-  date: string; // YYYY-MM-DD
+  date: string; // yyyy-MM-dd
   status: AvailabilityStatus;
-  reason?: AvailabilityReason;
-  source: "manual" | "google";
-  confidence: "high" | "derived";
+  reason?: string;
+  source: AvailabilitySource;
+  confidence: AvailabilityConfidence;
 }

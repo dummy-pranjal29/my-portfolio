@@ -1,16 +1,12 @@
 "use client";
 
-import { format, startOfMonth, endOfMonth } from "date-fns";
-import { useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MonthNavigator } from "./MonthNavigator";
 import { CalendarGrid } from "./CalendarGrid";
+import { AvailabilityBlock } from "@/domain/calendar/availability";
 import { DayContextPanel } from "./DayContextPanel";
-
-import { availabilityRepository } from "@/domain/calendar/availabilityRepository";
-import { mockAvailabilityBlocks } from "@/domain/calendar/mockAvailabilityBlocks";
-import { getAvailabilityMap } from "@/domain/calendar/selectors";
+import { DateActionPanel } from "./DateActionPanel";
 
 interface CalendarDrawerProps {
   open: boolean;
@@ -18,39 +14,101 @@ interface CalendarDrawerProps {
 }
 
 export function CalendarDrawer({ open, onOpenChange }: CalendarDrawerProps) {
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [visibleMonth, setVisibleMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [availabilityMap, setAvailabilityMap] = useState<
+    Record<string, AvailabilityBlock>
+  >({});
+  const [chatOpen, setChatOpen] = useState(false);
 
-  const start = format(startOfMonth(visibleMonth), "yyyy-MM-dd");
-  const end = format(endOfMonth(visibleMonth), "yyyy-MM-dd");
-
-  const availabilityBlocks = availabilityRepository.getByDateRange(start, end);
-
-  const availabilityMap = getAvailabilityMap(availabilityBlocks);
-
+  /* ---------------- CALENDAR LIFECYCLE ---------------- */
   useEffect(() => {
-    availabilityRepository.clear();
-    availabilityRepository.upsert(mockAvailabilityBlocks);
+    if (open) {
+      window.dispatchEvent(new Event("calendar-opened"));
+    } else {
+      window.dispatchEvent(new Event("calendar-closed"));
+    }
+  }, [open]);
+
+  /* ---------------- CHAT LIFECYCLE ---------------- */
+  useEffect(() => {
+    const onChatOpen = () => setChatOpen(true);
+    const onChatClose = () => setChatOpen(false);
+
+    window.addEventListener("chat-opened", onChatOpen);
+    window.addEventListener("chat-closed", onChatClose);
+
+    return () => {
+      window.removeEventListener("chat-opened", onChatOpen);
+      window.removeEventListener("chat-closed", onChatClose);
+    };
   }, []);
+
+  /* ---------------- FETCH AVAILABILITY ---------------- */
+  useEffect(() => {
+    if (!open) return;
+
+    fetch("/api/calendar/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ month: visibleMonth.toISOString() }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data?.availabilityMap) return;
+        const normalized: Record<string, AvailabilityBlock> = {};
+        Object.entries(data.availabilityMap).forEach(([k, v]) => {
+          normalized[k.slice(0, 10)] = v as AvailabilityBlock;
+        });
+        setAvailabilityMap(normalized);
+      });
+  }, [open, visibleMonth]);
+
+  /* ---------------- ASK AI ---------------- */
+  const handleAskAI = (date: string) => {
+    const availability = availabilityMap[date] ?? null;
+
+    window.dispatchEvent(
+      new CustomEvent("open-chat", {
+        detail: {
+          source: "calendar",
+          context: { date, availability },
+        },
+      }),
+    );
+  };
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
+        {/* 🔑 OVERLAY */}
+        <Dialog.Overlay
+          className={`
+            fixed inset-0 bg-black/40 z-40
+            ${chatOpen ? "pointer-events-none" : ""}
+          `}
+        />
 
-        <Dialog.Content className="fixed right-0 top-0 h-full w-full sm:w-[460px] bg-zinc-950 text-zinc-100 z-50 border-l border-zinc-800 flex flex-col">
+        {/* 🔑 CONTENT */}
+        <Dialog.Content
+          className={`
+            fixed right-0 top-0 h-full w-full sm:w-[460px]
+            bg-zinc-950 text-zinc-100
+            z-50 border-l border-zinc-800
+            flex flex-col
+            transition-all duration-200
+            ${chatOpen ? "blur-sm brightness-75 pointer-events-none" : ""}
+          `}
+        >
           <header className="flex items-center justify-between p-4 border-b border-zinc-800">
-            <Dialog.Title className="text-sm font-semibold">
-              Availability
-            </Dialog.Title>
-
+            <h2 className="text-sm font-semibold">Availability</h2>
             <Dialog.Close className="text-zinc-400 hover:text-white">
               ✕
             </Dialog.Close>
           </header>
 
           <MonthNavigator
-            visibleMonth={visibleMonth}
+            currentMonth={visibleMonth}
             onChange={setVisibleMonth}
           />
 
@@ -61,7 +119,21 @@ export function CalendarDrawer({ open, onOpenChange }: CalendarDrawerProps) {
             onSelectDate={setSelectedDate}
           />
 
-          <DayContextPanel selectedDate={selectedDate} />
+          {selectedDate && (
+            <DateActionPanel
+              date={selectedDate}
+              onAskAI={() => handleAskAI(selectedDate)}
+              // onProposeMeeting={() => alert("Meeting coming 👀")}
+              // onMakeCall={() => alert("Call coming 📞")}
+            />
+          )}
+
+          <DayContextPanel
+            date={selectedDate}
+            availability={
+              selectedDate ? availabilityMap[selectedDate] : undefined
+            }
+          />
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
