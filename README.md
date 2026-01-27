@@ -28,7 +28,7 @@ This portfolio is designed to answer one question:
 ## 🚀 Live Demo
 
 🔗 **Portfolio**  
-👉 https://<your-vercel-link>.vercel.app
+👉 https://pranjalportfolio-ivory.vercel.app/
 
 > Deployed on Vercel · Continuously updated · Production-ready
 
